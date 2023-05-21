@@ -70,7 +70,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
               <img src="../dist/img/yo.jpg" class="user-image" alt="User Image">
               <!-- hidden-xs hides the username on small devices so only the image appears. -->
               <span class="hidden-xs">
-                <?php
+              <?php
                     echo $_SESSION['name']
                 ?>
               </span>
@@ -81,9 +81,9 @@ scratch. This page gets rid of all links and provides the needed markup only.
                 <img src="dist/img/yo.jpg" class="img-circle" alt="User Image">
 
                 <p>
-                <?php
-                    echo $_SESSION['name']
-                ?>
+                    <?php
+                        echo $_SESSION['name']
+                    ?>
                   <small>Member since Nov. 2023</small>
                 </p>
               </li>
@@ -92,14 +92,14 @@ scratch. This page gets rid of all links and provides the needed markup only.
               <!-- Menu Footer-->
               <li class="user-footer">
                 <div class="float-left">
-                  <a href="changePassword.php" class="btn btn-default btn-flat">Change Password</a>
+                  <a href="#" class="btn btn-default btn-flat">Profile</a>
                 </div>
                 <div class="float-right">
                   <a href="logout.php" class="btn btn-default btn-flat">Sign out</a>
                 </div>
               </li>
             </ul>
-          </li>
+      </li>
      
      
       <li class="nav-item">
@@ -132,9 +132,9 @@ scratch. This page gets rid of all links and provides the needed markup only.
           <img src="../dist/img/yo.jpg" class="img-circle elevation-2" alt="User Image">
         </div>
         <div class="info">
-          <a href="#" class="d-block">
-                <?php
-                    echo $_SESSION['name']
+          <a href="#" class="d-block"> 
+          <?php
+                    echo "WELCOME ".$_SESSION['name']
                 ?>
           </a>
         </div>
@@ -158,35 +158,37 @@ scratch. This page gets rid of all links and provides the needed markup only.
           <!-- Add icons to the links using the .nav-icon class
                with font-awesome or any other icon font library -->
           <li class="nav-item menu-open">
-            <a href="#" class="nav-link ">
+            <a href="#" class="nav-link active">
               <i class="nav-icon fas fa-tachometer-alt"></i>
               <p>
-                Admin Options
+                Starter Pages
                 <i class="right fas fa-angle-left"></i>
               </p>
             </a>
             <ul class="nav nav-treeview">
               <li class="nav-item">
-                <a href="dashboard.php" class="nav-link">
+                <a href="#" class="nav-link active">
                   <i class="far fa-circle nav-icon"></i>
-                  <p>Dashboard</p>
+                  <p>Active Page</p>
                 </a>
               </li>
               <li class="nav-item">
-                <a href="category.php" class="nav-link">
-                  <i class="far fa-list-alt nav-icon"></i>
-                  <p>Category</p>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a href="registration.php" class="nav-link">
-                  <i class="far fa-registered nav-icon"></i>
-                  <p>Registration</p>
+                <a href="#" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Inactive Page</p>
                 </a>
               </li>
             </ul>
           </li>
-          
+          <li class="nav-item">
+            <a href="#" class="nav-link">
+              <i class="nav-icon fas fa-th"></i>
+              <p>
+                Simple Link
+                <span class="right badge badge-danger">New</span>
+              </p>
+            </a>
+          </li>
         </ul>
       </nav>
       <!-- /.sidebar-menu -->

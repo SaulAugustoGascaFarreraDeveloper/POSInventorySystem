@@ -1,16 +1,103 @@
+<!-- jQuery -->
+<script src="../../../plugins/jquery/jquery.min.js"></script>
+<!-- Bootstrap 4 -->
+<script src="../../../plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+<!-- AdminLTE App -->
+<script src="../../../dist/js/adminlte.min.js"></script>
+
+<script src="../plugins/sweetalert2/sweetalert2.all.js"></script>
+
+
 <?php
-  include_once'../db/connectdb.php';
+      include_once'../db/connectdb.php';
 
-  session_start();
+      session_start();
 
-  if(isset($_POST['btn_login']))
-  {
-    $email = $_POST['txt_email'];
-    $password = $_POST['txt_password'];
+      
 
-    echo $email.' - '.$password;
+      
 
-  }
+      if(isset($_POST['btn_login']))
+      {
+            $email = $_POST['txt_email'];
+            $password = $_POST['txt_password'];
+
+            $select = $pdo->prepare("select * from tbl_user where email='$email' AND password='$password'");
+
+            $select->execute();
+
+            $row = $select->fetch(PDO::FETCH_ASSOC);
+
+            /*if($select->execute())
+            {
+              $row = $select->fetch(PDO::FETCH_ASSOC);
+
+              print_r($row);
+            }*/
+
+            if($row['email'] === $email && $row['password'] === $password && $row['role'] === "Admin")
+            {
+
+              
+
+                
+                $_SESSION['email'] = $row['email'];
+                $_SESSION['name'] = $row['name'];
+                $_SESSION['email'] = $row['email'];
+                $_SESSION['role'] = $row['role'];
+               
+
+                  echo '<script type="text/javascript">
+                    jQuery(function validation(){
+                      Swal.fire({
+                        icon: "success",
+                        title: "Good Job! '.$_SESSION['name'].' ",
+                        text: "You have bben login succesfully",
+                        button:"Loading.....",
+                      })
+                    })
+                  </script>';
+
+                  header('refresh:2;dashboard.php');
+
+            }elseif($row['email'] === $email && $row['password'] === $password && $row['role'] === "User"){
+              
+              
+
+                $_SESSION['id'] = $row['id'];
+                $_SESSION['name'] = $row['name'];
+                $_SESSION['email'] = $row['email'];
+                $_SESSION['role'] = $row['role'];
+
+                echo '<script type="text/javascript">
+                    jQuery(function validation(){
+                      Swal.fire({
+                        icon: "success",
+                        title: "Good Job! '.$_SESSION['name'].' ",
+                        text: "You have bben login succesfully",
+                        button:"Loading.....",
+                      })
+                    })
+                  </script>';
+
+                  header('refresh:2;user.php');
+              
+            }else{
+              echo '<script type="text/javascript">
+                    jQuery(function validation(){
+                      Swal.fire({
+                        icon: "error",
+                        title: "Login Failed ",
+                        text: "Check your data",
+                        button:"Loading.....",
+                      })
+                    })
+                  </script>';
+
+              session_destroy();
+            }
+
+      }
 
 ?>
 
@@ -42,7 +129,7 @@
 
       <form action="" method="post">
         <div class="input-group mb-3">
-          <input type="email" class="form-control" placeholder="Email" name="txt_email">
+          <input type="email" class="form-control" placeholder="Email" name="txt_email" required>
           <div class="input-group-append">
             <div class="input-group-text">
               <span class="fas fa-envelope"></span>
@@ -50,7 +137,7 @@
           </div>
         </div>
         <div class="input-group mb-3">
-          <input type="password" class="form-control" placeholder="Password" name="txt_password">
+          <input type="password" class="form-control" placeholder="Password" name="txt_password" required>
           <div class="input-group-append">
             <div class="input-group-text">
               <span class="fas fa-lock"></span>
@@ -60,7 +147,7 @@
         <div class="row">
           <div class="col-8">
               <p class="mb-1">
-                <a href="forgot-password.html">I forgot my password</a>
+                <a href="#" onclick="Swal.fire('To Get Password','Contact with the provider or admin','error')">I forgot my password</a>
               </p>
           </div>
           <!-- /.col -->
@@ -83,11 +170,5 @@
 </div>
 <!-- /.login-box -->
 
-<!-- jQuery -->
-<script src="../../../plugins/jquery/jquery.min.js"></script>
-<!-- Bootstrap 4 -->
-<script src="../../../plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
-<!-- AdminLTE App -->
-<script src="../../../dist/js/adminlte.min.js"></script>
 </body>
 </html>

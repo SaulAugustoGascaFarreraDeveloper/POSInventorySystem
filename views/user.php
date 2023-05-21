@@ -1,30 +1,20 @@
-
-
-<script src="../plugins/sweetalert2/sweetalert2.all.js"></script>
-
 <?php
-      session_start();
 
-      // Check if the user is not logged in
-      if (empty($_SESSION['email'])) {
+
+        session_start();
+
+        //session_destroy();
+
+
+        if (empty($_SESSION['email'])) 
+        {
           header('Location: index.php');
           exit();
-      }
+        }
 
-      if($_SESSION['role'] == 'User')
-      {
-
-        
-        header('Location: user.php');
-
-        exit();
-      }
-
-
-      include_once'header.php'
+        include_once'./headeruser.php';
 
 ?>
-
 
 
   <!-- Content Wrapper. Contains page content -->
@@ -34,7 +24,7 @@
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1 class="m-0"><b>Admin Dashboard</b></h1>
+            <h1 class="m-0"><b>User Dashboard</b></h1>
             <br/>
             <small>Here the admin can manage the inventory system</small>
           </div><!-- /.col -->
@@ -72,16 +62,12 @@
 
 <?php
 
-    include_once'footer.php'
+    include_once'./footer.php'
 ?>
 
 
-
-<!-- REQUIRED SCRIPTS -->
-
-<!-- jQuery -->
 <script src="../plugins/jquery/jquery.min.js"></script>
 <!-- Bootstrap 4 -->
 <script src="../plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
-<!-- AdminLTE App -->
+
 <script src="../dist/js/adminlte.min.js"></script>
