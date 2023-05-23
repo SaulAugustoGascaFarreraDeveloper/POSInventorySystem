@@ -1,8 +1,141 @@
+
+
+<script src="../plugins/sweetalert2/sweetalert2.all.js"></script>
+
+
 <?php
+
+
+     ob_start();
+
+    include_once'../db/connectdb.php';
 
     session_start();
 
-    include_once'./header.php';
+
+    if( $_SESSION['email'] == "" OR $_SESSION['role'] === '')
+    {
+      header("Location: index.php");
+      
+    }
+
+    if($_SESSION['role'] == "Admin")
+    {
+      include_once'./header.php';
+    }else{
+      include_once'./headeruser.php';
+    }
+
+
+    if(isset($_POST['btnUpdate']))
+    {
+        $txtOldPassword = $_POST['txtOldPassword'];
+        $txtPassword = $_POST['txtPassword1'];
+        $txtConfirmPassword = $_POST['txtConfirmPassword'];
+
+
+        $email = $_SESSION['email'];
+
+        $select = $pdo->prepare("select * from tbl_user where email='$email'");
+
+        $select->execute();
+
+        $row = $select->fetch(PDO::FETCH_ASSOC);
+
+        $useremail_db = $row['email'];
+        $userpassword_db = $row['password'];
+
+        //Comapre user input and database values
+
+        if($txtOldPassword === $userpassword_db )
+        {
+
+                  if($txtPassword == $txtConfirmPassword)
+                  {
+
+
+                                  $update = $pdo->prepare("update tbl_user set password=:password where email=:email");
+
+                                  $update->bindParam(':password',$txtConfirmPassword);
+                                  $update->bindParam(':email',$email);
+
+
+                                  if($update->execute())
+                                  {
+
+                                          echo '<script type="text/javascript">
+                                          jQuery(function validation(){
+                                            Swal.fire({
+                                              icon: "success",
+                                              title: "Congratulations !!!",
+                                              text: "Your Password Has Been Updated Succesfully !!!",
+                                              button:"Ok",
+                                            })
+                                          })
+                                        </script>';
+                                  }
+
+                                  else
+                                  {
+                                        echo '<script type="text/javascript">
+                                        jQuery(function validation(){
+                                          Swal.fire({
+                                            icon: "error",
+                                            title: "Fail !!!",
+                                            text: "Your Password Has Not Updated !!!",
+                                            button:"Ok",
+                                          })
+                                        })
+                                      </script>';
+
+
+                                      header("refresh:1.5; changePassword.php");
+                                  }
+
+
+                  }
+                  else{
+
+
+                    echo '<script type="text/javascript">
+                    jQuery(function validation(){
+                      Swal.fire({
+                        icon: "error",
+                        title: "Error !!!",
+                        text: "Your Password Does not Match !!!",
+                        button:"Ok",
+                      })
+                    })
+                  </script>';
+
+
+                  header("refresh:1.5; changePassword.php");
+
+
+                 }
+
+
+
+
+          
+
+        }else{
+              echo '<script type="text/javascript">
+              jQuery(function validation(){
+                Swal.fire({
+                  icon: "warning",
+                  title: "Warning !!!",
+                  text: "Your Password Is Wrong Please Fill Right Password",
+                  button:"Ok",
+                })
+              })
+            </script>';
+
+              header("refresh:1.5; changePassword.php");
+
+        }
+
+    }
 
 ?>
 
@@ -33,16 +166,16 @@
               </div>
               <!-- /.card-header -->
               <!-- form start -->
-              <form>
+              <form action="" method="post">
                 <div class="card-body">
                  
                   <div class="form-group">
                     <label for="changePassword1">Password</label>
-                    <input type="password" class="form-control" id="oldPassword" placeholder="Old Password" name="txtOldPassword">
+                    <input type="password" class="form-control" id="oldPassword" placeholder="Old Password" name="txtOldPassword" require>
                     <br/>
-                    <input type="password" class="form-control" id="changePassword1" placeholder="Password" name="txtPassword1">
+                    <input type="password" class="form-control" id="changePassword1" placeholder="Password" name="txtPassword1" require>
                     <br/>
-                    <input type="password" class="form-control" id="changePassword2" placeholder="Confirm Password" name="txtConfirmPassword" >
+                    <input type="password" class="form-control" id="changePassword2" placeholder="Confirm Password" name="txtConfirmPassword" require >
                     <br/>
                     <span id="passwordMatchMessage" style="display: none; color: red;">Password don't match</span>
                     <br/>
@@ -91,6 +224,7 @@
 
 <script>
             document.addEventListener('DOMContentLoaded', function() {
+            var oldPassword = document.getElementById('oldPassword');
             var passwordInput1 = document.getElementById('changePassword1');
             var passwordInput2 = document.getElementById('changePassword2');
             var passwordMatchMessage = document.getElementById('passwordMatchMessage');
@@ -98,8 +232,10 @@
 
             showPasswordCheckbox.addEventListener('change', function() {
                 if (this.checked) {
+                oldPassword.type = 'text';
                 passwordInput1.type = 'text';
                 } else {
+                oldPassword.type = 'password';
                 passwordInput1.type = 'password';
                 }
             });
@@ -123,3 +259,11 @@
 
     include_once'./footer.php'
 ?>
+
+
+<!-- jQuery -->
+<script src="../../../plugins/jquery/jquery.min.js"></script>
+<!-- Bootstrap 4 -->
+<script src="../../../plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+<!-- AdminLTE App -->
+<script src="../../../dist/js/adminlte.min.js"></script>

@@ -88,7 +88,7 @@
                       Swal.fire({
                         icon: "error",
                         title: "Login Failed ",
-                        text: "Check your data",
+                        text: "Email or Password is Wrong !!",
                         button:"Loading.....",
                       })
                     })

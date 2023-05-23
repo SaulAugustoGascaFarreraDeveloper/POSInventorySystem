@@ -6,7 +6,7 @@
         //session_destroy();
 
 
-        if (empty($_SESSION['email'])) 
+        if (empty($_SESSION['email']) OR $_SESSION['role'] == 'Admin') 
         {
           header('Location: index.php');
           exit();
