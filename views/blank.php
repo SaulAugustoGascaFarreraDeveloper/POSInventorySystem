@@ -1,4 +1,9 @@
+<script src="../plugins/sweetalert2/sweetalert2.all.js"></script>
+
 <?php
+
+
+    session_start();
 
     include_once'./header.php';
 
@@ -52,3 +57,10 @@
 
     include_once'./footer.php'
 ?>
+
+
+<script src="../plugins/jquery/jquery.min.js"></script>
+<!-- Bootstrap 4 -->
+<script src="../plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+<!-- AdminLTE App -->
+<script src="../dist/js/adminlte.min.js"></script>
