@@ -2,15 +2,69 @@
 
 <?php
 
-    include_once('../db/connectdb.php');
-   
-    
+
     
 
-    session_start();
+      include_once("../db/connectdb.php");
+      session_start();
 
-    include_once'./header.php';
+    
+    require_once __DIR__."/../vendor/autoload.php";
 
+    use PhpOffice\PhpSpreadsheet\Spreadsheet;
+    use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+
+    
+
+    // Consulta para obtener los datos de la base de datos
+      $get = $pdo->prepare("SELECT * FROM tbl_user");
+      $get->execute();
+      $data = $get->fetchAll(PDO::FETCH_ASSOC);
+
+
+      if (isset($_POST['export_excel'])) {
+            // Crear un nuevo objeto de archivo de Excel
+            $spreadsheet = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
+            $sheet = $spreadsheet->getActiveSheet();
+
+            // Establecer encabezados de columna
+            $sheet->setCellValue('A1', 'ID');
+            $sheet->setCellValue('B1', 'Name');
+            $sheet->setCellValue('C1', 'Email');
+            $sheet->setCellValue('D1', 'Password');
+            $sheet->setCellValue('E1', 'Role');
+            $sheet->setCellValue('F1', 'Image');
+
+            // Llenar datos en la hoja de trabajo
+            $row = 2;
+            foreach ($data as $row_data) {
+                $sheet->setCellValue('A' . $row, $row_data['id']);
+                $sheet->setCellValue('B' . $row, $row_data['name']);
+                $sheet->setCellValue('C' . $row, $row_data['email']);
+                $sheet->setCellValue('D' . $row, $row_data['password']);
+                $sheet->setCellValue('E' . $row, $row_data['role']);
+                $sheet->setCellValue('F' . $row, $row_data['image']);
+                $row++;
+            }
+
+            // Establecer el nombre del archivo
+            $filename = 'users.xlsx';
+
+
+             // Limpiar el búfer de salida
+             ob_clean();
+
+            // Configurar encabezados para la descarga del archivo
+            header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+            header('Content-Disposition: attachment; filename="' . $filename . '"');
+            header('Cache-Control: max-age=0');
+
+            // Guardar el archivo de Excel en la salida
+            $writer = new \PhpOffice\PhpSpreadsheet\Writer\Xlsx($spreadsheet);
+            $writer->save('php://output');
+            exit();
+
+    }
 
     if(isset($_POST['btnSave']))
     {
@@ -53,8 +107,8 @@
         
     }
 
-    
 
+    include_once'./header.php';
 
 
 ?>
@@ -127,7 +181,10 @@
               </div>
 
               <button type="submit" class="btn btn-info" name="btnSave"   >Save</button>
-              <!-- /.box-body -->
+              
+              
+          <!-- /.box-body -->
+            <button type="submit" name="export_excel" class="btn btn-success mr-4">Export to Excel</button>
               
             </form>
           </div>
@@ -153,40 +210,35 @@
             </thead>
           
             <tbody>
-              <?php 
+            <?php
+                                $get = $pdo->prepare("SELECT * FROM tbl_user ORDER BY id DESC");
+                                $get->execute();
+                                $data = $get->fetchAll(PDO::FETCH_ASSOC);
 
-                  $get = $pdo->prepare("select * from tbl_user order by id desc");
+                                foreach ($data as $row_data) {
+                                    echo '
+                                    <tr>
+                                        <td>' . $row_data['id'] . '</td>
+                                        <td>' . $row_data['name'] . '</td>
+                                        <td>' . $row_data['email'] . '</td>
+                                        <td>' . $row_data['password'] . '</td>
+                                        <td>' . $row_data['role'] . '</td>
+                                        <td><img src="' . $row_data['image'] . '" alt="User Image" width="60"></td>
+                                    </tr>';
+                                }
 
-                  $get->execute();
 
-                  while($row=$get->fetch(PDO::FETCH_ASSOC))
-                  {
-                    echo'
 
-                    <tr>
 
-                      <td>'.$row['id'].'</td>
-                      <td>'.$row['name'].'</td>
-                      <td>'.$row['email'].'</td>
-                      <td>'.$row['password'].'</td>
-                      <td>'.$row['role'].'</td>
-                      <td><img src="' . $row['image'] . '" alt="User Image" width="60"></td>
-                    
-                    </tr>
-                    
-                    
-                    ';
-                  }
-                  
+                                
 
-                 
-
-              
-              ?>
+                               
+          ?>
             </tbody>
 
 
           </table>
+
 
           </div>
           
@@ -236,7 +288,9 @@
 
 <?php
 
-    include_once'./footer.php'
+    include_once'./footer.php';
+
+    ob_end_flush();
 ?>
 
 
